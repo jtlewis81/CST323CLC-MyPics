@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="layouts/loginRegistrationTemplate">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyPics</title>
+</head>
+	<body>
+		<div layout:fragment="content">
+			<img style="padding-top: 4%; height: 300px; width:auto;" th:src="@{/images/mypics_logo.png}"/><br/><br/>
+			<h1 style="color: Black;">Log In</h1>
+			
+			<div class="col-10-md" th:if="${param.error}">
+				<span style="color:red">Invalid Username or Password.</span>
+			</div>
+			
+			<form class="row g-3" th:action="@{/}" method="post">
+				
+				<div class="col-md-12">
+					<label for="username" class="col-sm-2 col-md-1 col-form-label">User Name:</label>
+					<input type="text" name="username" id="username" placeholder="UserName" required>
+				</div>
+				
+				<div class="col-md-12">
+					<label for="password" class="col-sm-2 col-md-1 col-form-label">Password:</label>
+					<input type="password" name="password" id="password" placeholder="Password" required>
+				</div>
+				
+				<div class="col-md-12">					
+					<div class="col-sm-2 col-sm-2" style="width:fit-content; text-align: center;">
+						<button type="submit" class="btn btn-primary" width=150px>Log In</button>
+					</div>
+				</div>
+			</form>
+			<br/>
+			
+			<a th:href="@{/registration/}" class="btn btn-outline-secondary">Register a New Profile</a><br/>
+		</div>
+	</body>
+</html>

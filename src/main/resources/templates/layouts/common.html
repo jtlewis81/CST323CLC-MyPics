@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MyPics</title>
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    	integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/8a1db32e51.js" crossorigin="anonymous"></script>
+	
+</head>
+
+<body>
+	<div th:fragment="header">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<div class="container-fluid">
+				<div class="row" style="width:100%;">
+					<div class="col align-self-center">
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+							data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+							aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarNav">
+							<ul class="navbar-nav">
+								<li class="nav-item">
+									<a class="nav-link active" th:href="@{/home}">Home</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link active" th:href="@{/profile/}">Profile</a>
+								</li>
+								<li class="nav-item">
+									<form th:action="@{/logout}" method="POST">
+										<input class="nav-link active" style="border: none; background-color: transparent;" type="submit" value="Log Out"/>
+									</form>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col">
+						<div style="flex-direction:column;" class="navbar-collapse">
+							<div class="row">
+								<a class="navbar-brand" th:href="@{/home}" style="font-style:italic; font-size: 1.5vh;">MyPics</a>
+							</div>
+							<div class="row" style="padding-top: 5%;">
+								<h1 th:text="${pageName}" style="color:white; font-weight: bold;">Page name</h1>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="navbar-collapse col">
+							<ul class="navbar-nav ms-auto flex-direction-col">
+								<div style="flex-direction:column">
+									<a th:href="@{/profile/}"><img class="img-thumbnail img-fluid" style="margin-top:25px;" alt="Your Profile" th:src="@{/images/Avatar.jpg}" /></a>
+									<p th:text="${username}">Default Text</p>
+								</div>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	</div>
+		<h2 th:text="${title}">Default message text</h2><br />
+	</div>
+
+	<!--Copyright footer-->
+	<div th:fragment="footer">
+		<!--<h5 style="color:blue; text-align: center; position:fixed; bottom: 0; width: 100%;">Copyright 2022 GCU</h5>-->
+	</div>
+</body>
+
+</html>

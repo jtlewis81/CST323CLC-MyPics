@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="layouts/loginRegistrationTemplate">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyPics</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div align="center" th:if="${existingUserError}" style="color:red;">Username Already Exists!</div>
+		<!--Form to create a new user, no data validation for inputs currently-->
+		<form class="row g-3" th:action="@{submitRegistration}" th:object="${userEntity}" method="post" style="width:75%; padding-top: 4%;">
+			<!--User Entry for Name-->
+			<div class="row mb-3">
+				<label class="col-sm-2 col-form-label">Name:</label>
+	  			<div class="col">
+	    			<input type="text" name="firstName" id="firstName" class="form-control" placeholder="First Name" required>
+	  			</div>
+	  			<div class="col">
+	    			<input type="text" name="lastName" id="lastName" class="form-control" placeholder="Last Name" required>
+	  			</div>
+			</div>
+			<!--User Entry for Email-->
+			<div class="row mb-3">
+	    		<label for="email" class="col-sm-2 col-form-label">Email:</label>
+	    		<div class="col-sm-10">
+	      			<input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+	    		</div>
+	  		</div>
+			<!--User entry for Username-->
+	  		<div class="row mb-3">
+	    		<label for="username" class="col-sm-2 col-form-label">Username:</label>
+	    		<div class="col-sm-10">
+	      			<input type="text" name="username" class="form-control" id="username" placeholder="User Name" required>
+	    		</div>
+	  		</div>
+			<!--User Entry for Password-->
+	  		<div class="row mb-3">
+	    		<label for="password" class="col-sm-2 col-form-label">Password:</label>
+	    		<div class="col-sm-10">
+	      			<input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+	    		</div>
+	  		</div>
+			<!--Buttons to let the user submit or cancel and return to login-->
+	  		<div class="row mb-3"> 	    		
+	  			<div class="col-sm-12">
+	  				<button type="submit" class="btn btn-primary">Register</button>
+					<a th:href="@{/}" class="btn btn-outline-secondary">Cancel</a></br>	
+	  			</div>
+	  		</div>
+		</form>	
+	</div>
+</body>
+</html>

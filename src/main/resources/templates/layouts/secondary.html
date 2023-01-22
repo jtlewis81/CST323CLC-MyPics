@@ -1,0 +1,37 @@
+<!--Secondary Template for pages with no navigation bar like login and registration-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <title>MyPics</title>
+</head>
+<body>
+<div th:fragment="header">
+	<!--Navbar that only navigates back to login-->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+	  <div style="flex-direction:column;" class="navbar-collapse">
+		<!--a href to take the user back to login-->
+		<div class="container">
+			<a class="navbar-brand" th:href="@{/}"
+				style="font-style:italic; font-size: 1.5vh;">MyPics</a>
+		</div>
+		<!--Header for page dynamically created by controllers-->
+		<div class="container">
+			<h1 th:text="${pageName}" style="color:white; font-weight: bold;">Page name</h1>
+		</div>
+	</div>
+	</nav>
+</div>
+	
+	<h2 th:text="${title}">Default message text</h2><br/>
+</div>
+
+<!--Copyright footer-->
+<div th:fragment="footer">
+	<!--<h5 style="color:blue; text-align: center; position:fixed; bottom: 0; width: 100%;">Copyright 2022 GCU</h5>-->
+</div>
+</body>
+</html>
