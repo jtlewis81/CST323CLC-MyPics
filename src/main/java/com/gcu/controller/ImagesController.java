@@ -1,12 +1,11 @@
 package com.gcu.controller;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.Principal;
 import javax.validation.Valid;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,26 +71,71 @@ public class ImagesController
             redirectAttributes.addFlashAttribute("message", "Please select a valid image file");
             return "redirect:uploadStatus";
         }
+        
+    	FTPClient client = new FTPClient();
+    	FileInputStream fis = null;
+    	String filepath = "/images/" + principal.getName() + "/";    	
+	    String filename = file.getOriginalFilename();
 
-        try
-        {
-        	String uploadPath = Paths.get("src", "main", "resources", "static", "images", principal.getName()).toString();
-            File uploadDir = new File(uploadPath);
-            if (!uploadDir.exists())
-            {
-                uploadDir.mkdir();
-            }
-        	
-            byte[] bytes = file.getBytes();
-            Path path = Paths.get(uploadPath, file.getOriginalFilename());
-            Files.write(path, bytes);
+    	try {
+    	    client.connect("beachblock.net");
+    	    client.login("jtlewis81", "");
+    	    client.setFileType(FTP.BINARY_FILE_TYPE);
 
-            redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'");
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }   	
+    	    //
+    	    // Check for existing directory or create it
+    	    //
+    	    try
+    		{
+    			if(client.changeWorkingDirectory(filepath) == false)
+    			{
+    				client.makeDirectory(filepath);
+    			}
+    		}
+        	catch (IOException e)
+    		{
+    			e.printStackTrace();
+    		}
+    	    
+    	    //
+    	    // Create an InputStream of the file to be uploaded
+    	    //
+    	    fis = (FileInputStream) file.getInputStream();
+
+    	    //
+    	    // Store file to server
+    	    //
+    	    client.changeWorkingDirectory(filepath);
+//    	    client.enterLocalPassiveMode();
+   	    	client.storeFile(filename, fis);
+    	    
+    	    client.logout();
+    	} catch (IOException e) {
+    	    e.printStackTrace();
+    	} finally {
+    		// disconnect
+    	    try {
+    	        if (fis != null) {
+    	            fis.close();
+    	        }
+    	        client.disconnect();
+    	    } catch (IOException e) {
+    	        e.printStackTrace();
+    	    }
+    	}
+    	
+//        	String uploadPath = Paths.get("http://ftp.beachblock.net/CST323CLC/images/", principal.getName()).toString();
+//            File uploadDir = new File(uploadPath);
+//            if (!uploadDir.exists())
+//            {
+//                uploadDir.mkdir();
+//            }
+//        	
+//            byte[] bytes = file.getBytes();
+//            Path path = Paths.get(uploadPath, file.getOriginalFilename());
+//            Files.write(path, bytes);
+//
+//            redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'"); 	
     	
         if (imageService.addImage(imageEntity))
         {
@@ -191,16 +235,44 @@ public class ImagesController
     {
     	ImageEntity image = imageService.getImageById(Integer.valueOf(imageId));
     	
+    	FTPClient client = new FTPClient();
+    	FileInputStream fis = null;
+    	String filepath = "/images/" + principal.getName() + "/";
+	    String filename = image.getFile();
+
+    	try {
+    	    client.connect("beachblock.net");
+    	    client.login("jtlewis81", "");
+    	    client.setFileType(FTP.BINARY_FILE_TYPE);
+    	    client.changeWorkingDirectory(filepath);
+    	    client.deleteFile(filename);
+    	    System.out.println(client.getReplyString());
+    	    
+    	    client.logout();
+    	} catch (IOException e) {
+    	    e.printStackTrace();
+    	} finally {
+    	    try {
+    	        if (fis != null) {
+    	            fis.close();
+    	        }
+    	        client.disconnect();
+    	    } catch (IOException e) {
+    	        e.printStackTrace();
+    	    }
+    	}
     	
-    	try
-    	{
-    		Path filePath = Paths.get("src", "main", "resources", "static", "images", principal.getName(), image.getFile());
-    		Files.delete(filePath);
-    	}
-    	catch (Exception e)
-    	{
-    		e.printStackTrace();
-    	}
+    	
+    	
+//    	try
+//    	{
+//    		Path filePath = Paths.get("http://ftp.beachblock.net/CST323CLC/images/", principal.getName(), image.getFile());
+//    		Files.delete(filePath);
+//    	}
+//    	catch (Exception e)
+//    	{
+//    		e.printStackTrace();
+//    	}
     	
     	if (imageService.deleteImage(Integer.valueOf(imageId)))
     	{

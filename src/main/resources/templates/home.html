@@ -180,7 +180,7 @@
 					<div id="ImageList" th:if="${!images.empty}">
 						<div th:each="image : ${images}">
 							<section class="Image">
-								<img th:src="@{/images/} + ${username} + '/' + ${image.file}" />
+								<img th:src="@{http://www.beachblock.net/CST323CLC/images/} + ${username} + '/' + ${image.file}" />
 								<section class="ImageDetails">
 									<div class="row">
 										<p th:text="${image.getDescription()}"></p>
