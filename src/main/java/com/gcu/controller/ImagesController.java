@@ -6,7 +6,10 @@ import java.security.Principal;
 import javax.validation.Valid;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,10 +24,13 @@ import com.gcu.business.UserBusinessServiceInterface;
 import com.gcu.data.entity.ImageEntity;
 import com.gcu.data.entity.UserEntity;
 
+@Component
 @Controller
 @RequestMapping("/image")
 public class ImagesController
 {
+	Logger logger = LoggerFactory.getLogger(ImagesController.class);
+
 	@Autowired
 	private UserBusinessServiceInterface userService;     
 	@Autowired
@@ -40,6 +46,8 @@ public class ImagesController
     @GetMapping("/")
     public String display(UserEntity user, Model model, Principal principal) 
     {
+		logger.info("[LOGGER] - loaded image upload page");
+		
         model.addAttribute("title", "Add Post");     
         model.addAttribute("pageName", "Create Post");
     	model.addAttribute("username", principal.getName());
@@ -60,6 +68,8 @@ public class ImagesController
     @PostMapping("/addImage")
     public String addImage( @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, String description, Principal principal, Model model) 
     {
+		logger.info("[LOGGER] - uploading image with filename: {}", file.getOriginalFilename());
+		
     	UserEntity user = userService.getUserByUsername(principal.getName());
     	ImageEntity imageEntity = new ImageEntity();
         imageEntity.setUserId(user.getId());
@@ -106,7 +116,6 @@ public class ImagesController
     	    // Store file to server
     	    //
     	    client.changeWorkingDirectory(filepath);
-//    	    client.enterLocalPassiveMode();
    	    	client.storeFile(filename, fis);
     	    
     	    client.logout();
@@ -123,19 +132,6 @@ public class ImagesController
     	        e.printStackTrace();
     	    }
     	}
-    	
-//        	String uploadPath = Paths.get("http://ftp.beachblock.net/CST323CLC/images/", principal.getName()).toString();
-//            File uploadDir = new File(uploadPath);
-//            if (!uploadDir.exists())
-//            {
-//                uploadDir.mkdir();
-//            }
-//        	
-//            byte[] bytes = file.getBytes();
-//            Path path = Paths.get(uploadPath, file.getOriginalFilename());
-//            Files.write(path, bytes);
-//
-//            redirectAttributes.addFlashAttribute("message", "You successfully uploaded '" + file.getOriginalFilename() + "'"); 	
     	
         if (imageService.addImage(imageEntity))
         {
@@ -171,6 +167,8 @@ public class ImagesController
     @GetMapping("/editImage")
     public String editImage(@RequestParam String imageId, ImageEntity imageEntity, Model model, Principal principal)
     {
+		logger.info("[LOGGER] - loaded edit image page");
+		
 		int id = Integer.valueOf(imageId);
 		imageEntity = imageService.getImageById(id);
 		UserEntity user = userService.getUserByUsername(principal.getName());
@@ -199,6 +197,8 @@ public class ImagesController
     @PostMapping("/updateImage")
     public String updateImage(@Valid ImageEntity imageEntity, String imageId, String description, BindingResult bindingResult, Model model, Principal principal)
     {
+		logger.info("[LOGGER] - editing description for image with filename: {}", imageEntity.getFile());
+		
     	imageEntity = imageService.getImageById(Integer.valueOf(imageId));
     	imageEntity.setDescription(description);
     	
@@ -233,6 +233,8 @@ public class ImagesController
     @PostMapping("/deleteImage")
     public String deleteImage(@Valid ImageEntity imageEntity, String imageId, Principal principal, BindingResult bindingResult, Model model)
     {
+		logger.info("[LOGGER] - deleting image with filename: {}", imageEntity.getFile());
+		
     	ImageEntity image = imageService.getImageById(Integer.valueOf(imageId));
     	
     	FTPClient client = new FTPClient();
@@ -261,18 +263,6 @@ public class ImagesController
     	        e.printStackTrace();
     	    }
     	}
-    	
-    	
-    	
-//    	try
-//    	{
-//    		Path filePath = Paths.get("http://ftp.beachblock.net/CST323CLC/images/", principal.getName(), image.getFile());
-//    		Files.delete(filePath);
-//    	}
-//    	catch (Exception e)
-//    	{
-//    		e.printStackTrace();
-//    	}
     	
     	if (imageService.deleteImage(Integer.valueOf(imageId)))
     	{

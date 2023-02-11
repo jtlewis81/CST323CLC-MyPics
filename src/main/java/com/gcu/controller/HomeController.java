@@ -2,7 +2,10 @@ package com.gcu.controller;
 
 import java.security.Principal;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +15,13 @@ import com.gcu.business.UserBusinessService;
 import com.gcu.data.entity.ImageEntity;
 import com.gcu.data.entity.UserEntity;
 
+@Component
 @Controller
 @RequestMapping("/home")
 public class HomeController 
 {
+	Logger logger = LoggerFactory.getLogger(HomeController.class);
+
 	// VARIABLES 
     @Autowired
     private UserBusinessService userService;     
@@ -26,6 +32,8 @@ public class HomeController
     @GetMapping("/")
     public String display(Model model, Principal principal) 
     {   
+		logger.info("[LOGGER] - loaded home page for user: {}", principal.getName());
+		
     	UserEntity user = userService.getUserByUsername(principal.getName());
     	List<ImageEntity> images = imageService.getAllImagesByUser(user);
     	

@@ -6,16 +6,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.gcu.data.entity.ImageEntity;
 import com.gcu.data.entity.UserEntity;
 
+@Component
 @Service
 public class ImageDataAccessService implements ImageDataAccessInterface
 {
+	Logger logger = LoggerFactory.getLogger(ImageDataAccessService.class);
+
 	@SuppressWarnings("unused")
 	@Autowired
 	private DataSource dataSource;
@@ -37,6 +43,8 @@ public class ImageDataAccessService implements ImageDataAccessInterface
 	@Override
 	public List<ImageEntity> getAllImagesByUser(UserEntity userEntity)
 	{
+		logger.info("[LOGGER] - returning all images for username: {}", userEntity.getUsername());
+		
 		String sql = "SELECT * FROM images WHERE User_ID = '" + userEntity.getId() + "'"; 
 		
 		List<ImageEntity> images = new ArrayList<ImageEntity>();
@@ -93,6 +101,10 @@ public class ImageDataAccessService implements ImageDataAccessInterface
 		{
 			e.printStackTrace();
 		}
+
+		logger.info("[LOGGER] - returning imageEntity by id for image with filename: {}", image.getFile());
+		
+		
 		return image;
 	}
 	
@@ -104,6 +116,8 @@ public class ImageDataAccessService implements ImageDataAccessInterface
 	@Override
 	public boolean add(ImageEntity imageEntity)
 	{
+		logger.info("[LOGGER] - adding image with filename: {}", imageEntity.getFile());
+		
 		LocalDateTime timestamp = LocalDateTime.now();   
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-YYYY, hh:mm:ss a");
         imageEntity.setTimestamp(timestamp.format(formatter));
@@ -136,7 +150,9 @@ public class ImageDataAccessService implements ImageDataAccessInterface
 	 */
 	@Override
 	public boolean update(ImageEntity imageEntity)
-	{ 
+	{
+		logger.info("[LOGGER] - updating description for image with filename: {}", imageEntity.getFile());
+		
 		LocalDateTime timestamp = LocalDateTime.now();   
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-YYYY, hh:mm:ss a");
         imageEntity.setTimestamp(timestamp.format(formatter));
@@ -170,6 +186,8 @@ public class ImageDataAccessService implements ImageDataAccessInterface
 	@Override
 	public boolean delete(int imageId)
 	{
+		logger.info("[LOGGER] - deleting image with filename: {}", getImageById(imageId).getFile());    	
+		
 		String sql = "DELETE FROM images WHERE ID = '" + imageId + "'";
 		try
 		{
@@ -186,6 +204,7 @@ public class ImageDataAccessService implements ImageDataAccessInterface
 			System.out.println("IMAGE DELETE FAILURE");
 			e.printStackTrace();
 		}
+		
 		return false;
 	}
 

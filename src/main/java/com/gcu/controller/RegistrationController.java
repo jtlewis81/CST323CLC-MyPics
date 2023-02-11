@@ -1,7 +1,10 @@
 package com.gcu.controller;
 
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,10 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.gcu.business.UserBusinessService;
 import com.gcu.data.entity.UserEntity;
 
+@Component
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController 
 {
+	Logger logger = LoggerFactory.getLogger(RegistrationController.class);
+
 	 @Autowired
 	 private UserBusinessService userService;
     
@@ -28,6 +34,8 @@ public class RegistrationController
     @GetMapping("/")
     public String displayRegistration(Model model) 
     {
+		logger.info("[LOGGER] - loaded registration page");
+		
         model.addAttribute("title", "Registration");       
         model.addAttribute("pageName", "Create Account");
         model.addAttribute("userEntity", new UserEntity());
@@ -43,6 +51,8 @@ public class RegistrationController
     @PostMapping("/submitRegistration")
     public ModelAndView submitRegistration(@Valid UserEntity userEntity, BindingResult bindingResult, Model model) 
     {      
+		logger.info("[LOGGER] - registering user: {}", userEntity.getUsername());
+		
         ModelAndView mv = new ModelAndView(); 
         
         boolean existingUserError = false;

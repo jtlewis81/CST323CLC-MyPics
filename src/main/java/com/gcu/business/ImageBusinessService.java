@@ -1,6 +1,9 @@
 package com.gcu.business;
 
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.gcu.data.ImageDataAccessService;
@@ -10,6 +13,8 @@ import com.gcu.data.entity.UserEntity;
 @Service
 public class ImageBusinessService implements ImageBusinessServiceInterface
 {
+	Logger logger = LoggerFactory.getLogger(UserBusinessService.class);
+	
 	@Autowired
 	ImageDataAccessService imageService;
 	
@@ -19,6 +24,8 @@ public class ImageBusinessService implements ImageBusinessServiceInterface
 	@Override
 	public List<ImageEntity> getAllImagesByUser(UserEntity userEntity)
 	{
+		logger.info("[LOGGER] - returning all images for username: {}", userEntity.getUsername());
+		
 		return imageService.getAllImagesByUser(userEntity);
 	}
 		
@@ -28,6 +35,8 @@ public class ImageBusinessService implements ImageBusinessServiceInterface
 	@Override
 	public boolean addImage(ImageEntity imageEntity)
 	{
+		logger.info("[LOGGER] - adding image with filename: {}", imageEntity.getFile());
+		
 		return imageService.add(imageEntity);
 	}
 	
@@ -37,6 +46,8 @@ public class ImageBusinessService implements ImageBusinessServiceInterface
 	@Override
 	public boolean updateImage(ImageEntity imageEntity)
 	{
+		logger.info("[LOGGER] - updating description for image with filename: {}", imageEntity.getFile());
+		
 		return imageService.update(imageEntity);	
 	}
 
@@ -46,8 +57,7 @@ public class ImageBusinessService implements ImageBusinessServiceInterface
 	@Override
 	public boolean deleteImage(int imageId)
 	{
-			
-    	
+		logger.info("[LOGGER] - deleting image with filename: {}", imageService.getImageById(imageId).getFile());    	
 		
 		return imageService.delete(imageId);		
 	}
@@ -56,7 +66,9 @@ public class ImageBusinessService implements ImageBusinessServiceInterface
 	 * Get a post by its record Id. 
 	 */
 	@Override
-	public ImageEntity getImageById(int imageId) {
+	public ImageEntity getImageById(int imageId)
+	{
+		logger.info("[LOGGER] - returning imageEntity by id for image with filename: {}", imageService.getImageById(imageId).getFile());
 		
 		return imageService.getImageById(imageId);
 	}
@@ -67,6 +79,8 @@ public class ImageBusinessService implements ImageBusinessServiceInterface
 	@Override
 	public ImageEntity getLastUserImage(UserEntity userEntity)
 	{
+		logger.info("[LOGGER] - returning last image for username: {}", userEntity.getUsername());
+		
 		return imageService.getLastUserImage(userEntity);
 	}
 }

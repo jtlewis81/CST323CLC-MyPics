@@ -1,17 +1,23 @@
 package com.gcu.data;
 
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.gcu.data.entity.UserEntity;
 
+@Component
 @Service
 public class UserDataAccessService implements UserDataAccessInterface
 {
+	Logger logger = LoggerFactory.getLogger(UserDataAccessService.class);
+	
 	@Autowired
 	@SuppressWarnings("unused")
 	private DataSource dataSource;
@@ -35,6 +41,8 @@ public class UserDataAccessService implements UserDataAccessInterface
 	@Override
 	public UserEntity getUserByUsername(String username)
 	{
+		logger.info("[LOGGER] - returning userEntity for username: {}", username);
+		
 		String sql = "SELECT * FROM users WHERE Username = '" + username + "'"; 
 		UserEntity user = null;
 		try
@@ -60,7 +68,8 @@ public class UserDataAccessService implements UserDataAccessInterface
 
 
 	@Override
-	public String getUsernameByUserId(int userId) {
+	public String getUsernameByUserId(int userId)
+	{
 		String sql = "SELECT * FROM users WHERE ID = '" + userId + "'";
 		String username = "";
 		try
@@ -74,13 +83,18 @@ public class UserDataAccessService implements UserDataAccessInterface
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		}		
+		}
+		
+		logger.info("[LOGGER] - returning username by Id for username: {}", username);
+		
 		return username;
 	}
 	
 	@Override
 	public boolean add(UserEntity userEntity)
 	{
+		logger.info("[LOGGER] - adding user with username: {}", userEntity.getUsername());
+		
 		boolean insertSuccess = false; 
 		String sql = "INSERT INTO users (FirstName, LastName, Email, Username, Password, ProfilePicture) VALUES (?, ?, ?, ?, ?, ?)";
 		try
@@ -114,6 +128,8 @@ public class UserDataAccessService implements UserDataAccessInterface
 	@Override
 	public boolean update(UserEntity userEntity)
 	{
+		logger.info("[LOGGER] - updating user with username: {}", userEntity.getUsername());
+		
 		// TODO To be added when a user has the option to edit their account information in their profile settings.
 		return false;
 	}
@@ -121,6 +137,8 @@ public class UserDataAccessService implements UserDataAccessInterface
 	@Override
 	public boolean delete(UserEntity userEntity)
 	{
+		logger.info("[LOGGER] - deleting user with username: {}", userEntity.getUsername());
+		
 		// TODO To be added when a user has the option to delete their account in their profile settings.
 		// 		Must also delete all of their posts!
 		
