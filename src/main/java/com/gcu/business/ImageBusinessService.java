@@ -1,19 +1,20 @@
 package com.gcu.business;
 
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import com.gcu.data.ImageDataAccessService;
 import com.gcu.data.entity.ImageEntity;
 import com.gcu.data.entity.UserEntity;
 
+@Component
 @Service
 public class ImageBusinessService implements ImageBusinessServiceInterface
 {
-	Logger logger = LoggerFactory.getLogger(UserBusinessService.class);
+	Logger logger = LoggerFactory.getLogger(ImageBusinessService.class);
 	
 	@Autowired
 	ImageDataAccessService imageService;
